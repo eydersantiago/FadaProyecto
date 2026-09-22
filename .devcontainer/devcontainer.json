@@ -15,11 +15,6 @@
     }
   },
 
-  // 2 cores bastan para 5 archivos .java y hacen el Codespace mas barato y rapido.
-  "hostRequirements": {
-    "cpus": 2,
-    "memory": "4gb"
-  },
 
   "customizations": {
     "vscode": {
