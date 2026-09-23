@@ -1,35 +1,25 @@
 {
-  // Proyecto NetBeans/Ant con javac.source=1.8 (ver nbproject/project.properties).
-  // Sin este archivo, Codespaces cae a la imagen universal, que trae todos los
-  // lenguajes y pesa decenas de GB: de ahi los minutos de arranque.
-  "name": "FadaProyecto (Java + Ant)",
-  "image": "mcr.microsoft.com/devcontainers/java:1-17-bookworm",
-
-  "features": {
-    // La imagen ya trae el JDK; aqui solo se anade Ant, que es lo que usa build.xml.
-    "ghcr.io/devcontainers/features/java:1": {
-      "version": "none",
-      "installMaven": false,
-      "installGradle": false,
-      "installAnt": true
-    }
-  },
-
-
+  "name": "ADACEEN Devcontainer",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
   "customizations": {
     "vscode": {
       "extensions": [
-        "vscjava.vscode-java-pack",
-        "adaceen.adaceen"
+        "adaceen.adaceen",
+        "ms-python.python",
+        "ms-vscode.cpptools",
+        "eamodio.gitlens"
       ],
       "settings": {
-        "java.configuration.updateBuildConfiguration": "automatic",
-        "adaceen.backend.autoWorkerEnabled": true,
-        "adaceen.backend.workerPollMs": 8000
+        "editor.formatOnSave": true,
+        "files.trimTrailingWhitespace": true,
+        "adaceen.backend.baseUrl": "https://app-adaceen-api-eyder05232002.azurewebsites.net"
       }
     }
-  }
-
-  // Sin postCreateCommand a proposito: un proyecto Ant no necesita instalar nada
-  // al crear el contenedor, y cada comando ahi son segundos en cada arranque.
+  },
+  "extensions": [
+    "adaceen.adaceen"
+  ],
+  "postCreateCommand": "bash .devcontainer/install-extensions.sh || true",
+  "postAttachCommand": "bash .devcontainer/install-extensions.sh || true",
+  "updateContentCommand": "bash .devcontainer/install-extensions.sh || true"
 }
