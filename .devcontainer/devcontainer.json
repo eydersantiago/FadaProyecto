@@ -1,26 +1,33 @@
 {
-  // Proyecto NetBeans/Ant con javac.source=1.8 (ver nbproject/project.properties).
-  // Sin este archivo, Codespaces cae a la imagen universal, que trae todos los
-  // lenguajes y pesa decenas de GB: de ahi los minutos de arranque.
-  "name": "FadaProyecto (Java + Ant)",
-  "image": "mcr.microsoft.com/devcontainers/java:1-17-bookworm",
+  // Arranque en dos fases.
+  //
+  // Fase 1 (bloquea): solo la imagen base, ~250 MB. Es lo unico que Codespaces
+  // tiene que bajar entero antes de mostrar el editor.
+  //
+  // Fase 2 (no bloquea): JDK + Ant se instalan en segundo plano desde
+  // postCreateCommand mientras el estudiante ya ve el codigo. Ver
+  // instalar-resto.sh; deja un marcador en /tmp/adaceen-entorno-listo.
+  "name": "FadaProyecto (2 fases)",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
 
-  "features": {
-    // La imagen ya trae el JDK; aqui solo se anade Ant, que es lo que usa build.xml.
-    "ghcr.io/devcontainers/features/java:1": {
-      "version": "none",
-      "installMaven": false,
-      "installGradle": false,
-      "installAnt": true
-    }
-  },
+  // Sin "features": cada feature se ejecuta al construir la imagen y bloquea.
+  // Lo mismo que harian va en el script de fase 2.
 
+
+  // El editor se abre en cuanto termina onCreateCommand (que aqui es nada).
+  "waitFor": "onCreateCommand",
+  "onCreateCommand": "true",
+
+  // setsid + nohup + & : devuelve el control al instante y el proceso
+  // sobrevive al shell que lo lanzo.
+  "postCreateCommand": "setsid nohup bash .devcontainer/instalar-resto.sh > /tmp/instalar-resto.log 2>&1 &",
 
   "customizations": {
     "vscode": {
+      // Estas las baja VS Code del Marketplace en paralelo, no las espera nadie.
       "extensions": [
-        "vscjava.vscode-java-pack",
-        "adaceen.adaceen"
+        "adaceen.adaceen",
+        "vscjava.vscode-java-pack"
       ],
       "settings": {
         "java.configuration.updateBuildConfiguration": "automatic",
@@ -29,7 +36,4 @@
       }
     }
   }
-
-  // Sin postCreateCommand a proposito: un proyecto Ant no necesita instalar nada
-  // al crear el contenedor, y cada comando ahi son segundos en cada arranque.
 }
