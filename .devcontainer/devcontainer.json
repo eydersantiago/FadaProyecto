@@ -1,39 +1,25 @@
 {
-  // Arranque en dos fases.
-  //
-  // Fase 1 (bloquea): solo la imagen base, ~250 MB. Es lo unico que Codespaces
-  // tiene que bajar entero antes de mostrar el editor.
-  //
-  // Fase 2 (no bloquea): JDK + Ant se instalan en segundo plano desde
-  // postCreateCommand mientras el estudiante ya ve el codigo. Ver
-  // instalar-resto.sh; deja un marcador en /tmp/adaceen-entorno-listo.
-  "name": "FadaProyecto (2 fases)",
-  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
-
-  // Sin "features": cada feature se ejecuta al construir la imagen y bloquea.
-  // Lo mismo que harian va en el script de fase 2.
-
-
-  // El editor se abre en cuanto termina onCreateCommand (que aqui es nada).
-  "waitFor": "onCreateCommand",
-  "onCreateCommand": "true",
-
-  // setsid + nohup + & : devuelve el control al instante y el proceso
-  // sobrevive al shell que lo lanzo.
-  "postCreateCommand": "setsid nohup bash .devcontainer/instalar-resto.sh > /tmp/instalar-resto.log 2>&1 &",
-
+  "name": "ADACEEN Devcontainer",
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
   "customizations": {
     "vscode": {
-      // Estas las baja VS Code del Marketplace en paralelo, no las espera nadie.
       "extensions": [
         "adaceen.adaceen",
-        "vscjava.vscode-java-pack"
+        "ms-python.python",
+        "ms-vscode.cpptools",
+        "eamodio.gitlens"
       ],
       "settings": {
-        "java.configuration.updateBuildConfiguration": "automatic",
-        "adaceen.backend.autoWorkerEnabled": true,
-        "adaceen.backend.workerPollMs": 8000
+        "editor.formatOnSave": true,
+        "files.trimTrailingWhitespace": true,
+        "adaceen.backend.baseUrl": "https://app-adaceen-api-eyder05232002.azurewebsites.net"
       }
     }
-  }
+  },
+  "extensions": [
+    "adaceen.adaceen"
+  ],
+  "postCreateCommand": "bash .devcontainer/install-extensions.sh || true",
+  "postAttachCommand": "bash .devcontainer/install-extensions.sh || true",
+  "updateContentCommand": "bash .devcontainer/install-extensions.sh || true"
 }
